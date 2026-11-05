@@ -2,90 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes"/>
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
-  <meta name="theme-color" content="#000000"/>
+  <meta name="theme-color" content="#050505"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-180.png"/>
-  <title>Grok Bot Desk</title>
+  <title>Desk · PAPER</title>
   <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
-  <div id="err" class="err hidden"></div>
-  <header class="navbar">
-    <button id="avatar" class="avatar" aria-label="Account">G</button>
-    <div class="nav-title">Grok Bot ›</div>
-    <button id="searchBtn" class="icon-btn" aria-label="Search">⌕</button>
-    <button id="bellBtn" class="icon-btn" aria-label="Alerts"><span class="bell">🔔</span><span id="bellDot" class="dot hidden"></span></button>
+  <div id="err" class="err hidden" role="status"></div>
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">◈</span>
+      <div>
+        <div class="brand-title">Desk</div>
+        <div class="brand-sub">Solana · memecoins</div>
+      </div>
+    </div>
+    <span id="paperPill" class="pill paper">PAPER</span>
   </header>
 
   <main id="screens">
     <!-- HOME -->
     <section id="home" class="screen active">
-      <div class="balance-row">
-        <div id="balance" class="balance odometer">$0.00</div>
-        <span id="paperPill" class="pill paper">PAPER</span>
+      <div class="pnl-hero">
+        <div class="pnl-label">Today · PAPER</div>
+        <div id="pnlToday" class="pnl-big">$0.00</div>
+        <div class="pnl-meta">
+          <span id="todayPct" class="chip">+0.00%</span>
+          <span id="equityLine" class="muted">Equity $0.00</span>
+        </div>
+        <div class="pnl-split">
+          <div class="pnl-tile">
+            <div class="k">Total PnL</div>
+            <div id="pnlTotal" class="v">$0.00</div>
+            <div id="totalPct" class="s">+0.00%</div>
+          </div>
+          <div class="pnl-tile">
+            <div class="k">Unrealized</div>
+            <div id="pnlUnreal" class="v">$0.00</div>
+            <div id="openCount" class="s">0 open</div>
+          </div>
+        </div>
       </div>
-      <div class="subrow">
-        <span id="todayPct" class="today">+0.00%</span>
-        <span id="mult" class="pill green">1.00×</span>
+
+      <div class="section-row">
+        <h2 class="section">Agents</h2>
+        <span id="agentsLive" class="muted">—</span>
       </div>
-      <canvas id="homeChart" class="home-chart" height="180"></canvas>
-      <div class="range-switch" id="rangeSwitch">
-        <button data-r="LIVE" class="on">LIVE</button>
-        <button data-r="1H">1H</button>
-        <button data-r="4H">4H</button>
-        <button data-r="1D">1D</button>
-        <button data-r="1W">1W</button>
-        <button data-r="ALL">ALL</button>
+      <div id="agentStrip" class="agent-strip"></div>
+
+      <div class="section-row">
+        <h2 class="section">Copy feed</h2>
+        <button id="seeCopy" class="link">See all</button>
       </div>
-      <h2 class="section">Agents · <span id="agentsRunning">5</span> running</h2>
-      <div id="agentCarousel" class="carousel"></div>
-      <div class="section-row"><h2 class="section">Activity</h2><button id="seeAll" class="link">See all</button></div>
-      <div id="homeActivity" class="list"></div>
+      <div id="homeCopy" class="feed"></div>
     </section>
 
     <!-- AGENTS -->
     <section id="agents" class="screen">
       <h1 class="page-title">Agents</h1>
+      <p class="lede">Scanner · Auditor · Analyst · Executor · Risk · Copy — PAPER only.</p>
       <div id="agentsList" class="stack"></div>
     </section>
 
-    <!-- ACTIVITY -->
-    <section id="activity" class="screen">
-      <h1 class="page-title">Activity</h1>
-      <div id="activityList" class="list"></div>
+    <!-- COPY / ACTIVITY -->
+    <section id="copy" class="screen">
+      <h1 class="page-title">Copy</h1>
+      <p class="lede">Followed traders · PAPER entries · group-buy alerts highlighted.</p>
+      <div id="copyRules" class="rules-bar"></div>
+      <div id="copyFeed" class="feed"></div>
     </section>
 
     <!-- ACCOUNT -->
     <section id="account" class="screen">
       <h1 class="page-title">Account</h1>
-      <div class="card">
-        <div class="row"><span>Mode</span>
-          <div class="seg">
-            <button id="modePaper" class="on">PAPER</button>
-            <button id="modeLive">LIVE</button>
-          </div>
-        </div>
-        <label class="row">Stack <input id="stackInput" type="number" step="1"/></label>
+      <div class="card glass">
+        <div class="row"><span>Mode</span><span class="pill paper">PAPER</span></div>
+        <div class="row"><span>Stack</span><span id="stackVal" class="mono">$200</span></div>
+        <div class="row"><span>Equity</span><span id="accEquity" class="mono">$0</span></div>
         <a id="profileLink" class="row linkrow" target="_blank" rel="noopener">Your FOMO profile</a>
         <button id="inviteBtn" class="row linkrow">Invite a friend</button>
         <div class="row"><span>Telegram</span><span id="tgStatus">—</span></div>
-        <button id="testPush" class="btn">Send test push</button>
-        <button id="enablePush" class="btn secondary hidden">Enable notifications</button>
       </div>
+      <p id="planBNote" class="muted note">Settings via Telegram on Plan B. Desk never places orders — FOMO taps only.</p>
       <h2 class="section">Settings</h2>
       <div id="settingsList" class="stack"></div>
-    </section>
-
-    <!-- AUDITOR DETAIL -->
-    <section id="auditorScreen" class="screen">
-      <button class="back" data-back>‹ Back</button>
-      <h1 class="page-title" id="auditTitle">Auditor</h1>
-      <div id="auditDiscs" class="discs"></div>
-      <div id="auditLayers" class="list"></div>
-      <a id="auditFomo" class="btn primary" target="_blank" rel="noopener">Open on FOMO</a>
     </section>
 
     <!-- COIN -->
@@ -96,23 +101,29 @@
           <h1 class="page-title" id="coinName">Coin</h1>
           <div id="coinMeta" class="muted"></div>
         </div>
-        <span id="coinPaper" class="pill paper">PAPER</span>
-        <span id="shield" class="pill cyan">8/8</span>
+        <span class="pill paper">PAPER</span>
       </div>
-      <div id="coinPrice" class="balance">$0</div>
-      <div id="coinSince" class="muted"></div>
-      <canvas id="coinChart" height="220"></canvas>
+      <div id="coinPrice" class="pnl-mid">—</div>
+      <canvas id="coinChart" height="200"></canvas>
       <div id="coinStats" class="stats"></div>
-      <div id="posCard" class="card hidden"></div>
-      <a id="coinFomo" class="btn primary" target="_blank" rel="noopener">Buy on FOMO</a>
+      <div id="posCard" class="card glass hidden"></div>
+      <a id="coinFomo" class="btn fomo" target="_blank" rel="noopener">Open on FOMO</a>
+    </section>
+
+    <!-- AUDITOR -->
+    <section id="auditorScreen" class="screen">
+      <button class="back" data-back>‹ Back</button>
+      <h1 class="page-title" id="auditTitle">Auditor</h1>
+      <div id="auditDiscs" class="discs"></div>
+      <a id="auditFomo" class="btn fomo" target="_blank" rel="noopener">Open on FOMO</a>
     </section>
   </main>
 
-  <nav class="tabbar">
-    <button data-tab="home" class="on">Home</button>
-    <button data-tab="agents">Agents</button>
-    <button data-tab="activity">Activity</button>
-    <button data-tab="account">Account</button>
+  <nav class="tabbar" aria-label="Main">
+    <button data-tab="home" class="on"><span class="ti">⌂</span><span>Home</span></button>
+    <button data-tab="agents"><span class="ti">◎</span><span>Agents</span></button>
+    <button data-tab="copy"><span class="ti">↔</span><span>Copy</span></button>
+    <button data-tab="account"><span class="ti">◯</span><span>Account</span></button>
   </nav>
 
   <script src="chart.js"></script>
