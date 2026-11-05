@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+  <meta name="theme-color" content="#000000"/>
+  <link rel="manifest" href="manifest.json"/>
+  <link rel="apple-touch-icon" href="icons/icon-180.png"/>
+  <title>Grok Bot Desk</title>
+  <link rel="stylesheet" href="app.css"/>
+</head>
+<body>
+  <div id="err" class="err hidden"></div>
+  <header class="navbar">
+    <button id="avatar" class="avatar" aria-label="Account">G</button>
+    <div class="nav-title">Grok Bot ›</div>
+    <button id="searchBtn" class="icon-btn" aria-label="Search">⌕</button>
+    <button id="bellBtn" class="icon-btn" aria-label="Alerts"><span class="bell">🔔</span><span id="bellDot" class="dot hidden"></span></button>
+  </header>
+
+  <main id="screens">
+    <!-- HOME -->
+    <section id="home" class="screen active">
+      <div class="balance-row">
+        <div id="balance" class="balance odometer">$0.00</div>
+        <span id="paperPill" class="pill paper">PAPER</span>
+      </div>
+      <div class="subrow">
+        <span id="todayPct" class="today">+0.00%</span>
+        <span id="mult" class="pill green">1.00×</span>
+      </div>
+      <canvas id="homeChart" class="home-chart" height="180"></canvas>
+      <div class="range-switch" id="rangeSwitch">
+        <button data-r="LIVE" class="on">LIVE</button>
+        <button data-r="1H">1H</button>
+        <button data-r="4H">4H</button>
+        <button data-r="1D">1D</button>
+        <button data-r="1W">1W</button>
+        <button data-r="ALL">ALL</button>
+      </div>
+      <h2 class="section">Agents · <span id="agentsRunning">5</span> running</h2>
+      <div id="agentCarousel" class="carousel"></div>
+      <div class="section-row"><h2 class="section">Activity</h2><button id="seeAll" class="link">See all</button></div>
+      <div id="homeActivity" class="list"></div>
+    </section>
+
+    <!-- AGENTS -->
+    <section id="agents" class="screen">
+      <h1 class="page-title">Agents</h1>
+      <div id="agentsList" class="stack"></div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section id="activity" class="screen">
+      <h1 class="page-title">Activity</h1>
+      <div id="activityList" class="list"></div>
+    </section>
+
+    <!-- ACCOUNT -->
+    <section id="account" class="screen">
+      <h1 class="page-title">Account</h1>
+      <div class="card">
+        <div class="row"><span>Mode</span>
+          <div class="seg">
+            <button id="modePaper" class="on">PAPER</button>
+            <button id="modeLive">LIVE</button>
+          </div>
+        </div>
+        <label class="row">Stack <input id="stackInput" type="number" step="1"/></label>
+        <a id="profileLink" class="row linkrow" target="_blank" rel="noopener">Your FOMO profile</a>
+        <button id="inviteBtn" class="row linkrow">Invite a friend</button>
+        <div class="row"><span>Telegram</span><span id="tgStatus">—</span></div>
+        <button id="testPush" class="btn">Send test push</button>
+        <button id="enablePush" class="btn secondary hidden">Enable notifications</button>
+      </div>
+      <h2 class="section">Settings</h2>
+      <div id="settingsList" class="stack"></div>
+    </section>
+
+    <!-- AUDITOR DETAIL -->
+    <section id="auditorScreen" class="screen">
+      <button class="back" data-back>‹ Back</button>
+      <h1 class="page-title" id="auditTitle">Auditor</h1>
+      <div id="auditDiscs" class="discs"></div>
+      <div id="auditLayers" class="list"></div>
+      <a id="auditFomo" class="btn primary" target="_blank" rel="noopener">Open on FOMO</a>
+    </section>
+
+    <!-- COIN -->
+    <section id="coinScreen" class="screen">
+      <button class="back" data-back>‹ Back</button>
+      <div class="coin-head">
+        <div>
+          <h1 class="page-title" id="coinName">Coin</h1>
+          <div id="coinMeta" class="muted"></div>
+        </div>
+        <span id="coinPaper" class="pill paper">PAPER</span>
+        <span id="shield" class="pill cyan">8/8</span>
+      </div>
+      <div id="coinPrice" class="balance">$0</div>
+      <div id="coinSince" class="muted"></div>
+      <canvas id="coinChart" height="220"></canvas>
+      <div id="coinStats" class="stats"></div>
+      <div id="posCard" class="card hidden"></div>
+      <a id="coinFomo" class="btn primary" target="_blank" rel="noopener">Buy on FOMO</a>
+    </section>
+  </main>
+
+  <nav class="tabbar">
+    <button data-tab="home" class="on">Home</button>
+    <button data-tab="agents">Agents</button>
+    <button data-tab="activity">Activity</button>
+    <button data-tab="account">Account</button>
+  </nav>
+
+  <script src="chart.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
