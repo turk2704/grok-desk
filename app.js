@@ -10,7 +10,7 @@
     offline: false,
     retry: 5,
     pollMs: 15000,
-    signupUrl: 'https://fomo.family/r/savipww',
+    signupUrl: 'https://fomo.family/r/turk2706',
   };
 
   function loadAuth() {
@@ -182,7 +182,7 @@
     const pnlHtml = pnl == null ? '' :
       `<div class="pnl ${pnl>=0?'pos':'neg'}">${fmtMoney(pnl, true)}</div>`;
     // FOMO URL must come from server (links.py). Never invent.
-    const fomo = e.coin_url && String(e.coin_url).includes('r=savipww')
+    const fomo = e.coin_url && String(e.coin_url).includes('r=turk2706')
       ? `<a class="fomo-mini" href="${e.coin_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">FOMO</a>`
       : '';
     return `<div class="feed-item ${group?'group':''}" data-mint="${e.mint||''}">
@@ -263,7 +263,7 @@
         const rows = (dec.decisions || []).slice(0,5).map(d => {
           const mint = d.mint || '';
           const url = d.coin_url || '';
-          const safe = url && url.includes('r=savipww');
+          const safe = url && url.includes('r=turk2706');
           return `<div class="row" data-mint="${mint}">
             <div><div class="title" style="font-weight:650">${(d.symbol||mint||'').toString().slice(0,12)}</div>
             <div class="muted">${d.verdict||d.reason||d.status||d.action||d.exit_reason||''}</div></div>
@@ -359,7 +359,7 @@
     setTab('auditorScreen');
     const data = await api('/api/audit/' + mint);
     $('#auditTitle').textContent = mint.slice(0,8) + '…';
-    if (data.coin_url && data.coin_url.includes('r=savipww')) $('#auditFomo').href = data.coin_url;
+    if (data.coin_url && data.coin_url.includes('r=turk2706')) $('#auditFomo').href = data.coin_url;
     const discs = $('#auditDiscs');
     discs.innerHTML = '';
     const layers = data.layers || [];
@@ -395,7 +395,7 @@
       $('#posCard').classList.add('hidden');
       $('#coinFomo').textContent = 'Buy on FOMO';
     }
-    if (data.coin_url && data.coin_url.includes('r=savipww')) {
+    if (data.coin_url && data.coin_url.includes('r=turk2706')) {
       $('#coinFomo').href = data.coin_url;
     }
     if (window.DeskCharts) DeskCharts.candles($('#coinChart'), data.candles, exitLine);
