@@ -9,7 +9,7 @@
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-180.png"/>
   <title>Desk · PAPER</title>
-  <link rel="stylesheet" href="app.css"/>
+  <link rel="stylesheet" href="app.css?v=20261110b"/>
 </head>
 <body>
   <div id="err" class="err hidden" role="status"></div>
@@ -50,13 +50,26 @@
       </div>
 
       <div class="section-row">
+        <h2 class="section">Open positions</h2>
+        <span id="posSummary" class="muted"></span>
+      </div>
+      <div id="homePositions" class="feed"></div>
+
+      <div id="closedWrap" class="hidden">
+        <div class="section-row">
+          <h2 class="section">Closed today</h2>
+        </div>
+        <div id="homeClosed" class="feed"></div>
+      </div>
+
+      <div class="section-row">
         <h2 class="section">Agents</h2>
         <span id="agentsLive" class="muted">—</span>
       </div>
       <div id="agentStrip" class="agent-strip"></div>
 
       <div class="section-row">
-        <h2 class="section">Copy feed</h2>
+        <h2 class="section">Copy trades</h2>
         <button id="seeCopy" class="link">See all</button>
       </div>
       <div id="homeCopy" class="feed"></div>
@@ -126,7 +139,7 @@
     <button data-tab="account"><span class="ti">◯</span><span>Account</span></button>
   </nav>
 
-  <script src="chart.js"></script>
-  <script src="app.js"></script>
+  <script src="chart.js?v=20261110b"></script>
+  <script src="app.js?v=20261110b"></script>
 </body>
 </html>

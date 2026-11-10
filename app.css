@@ -268,3 +268,9 @@ input[type=number], input[type=text] {
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+.feed-item.pos-item { border-left: 3px solid rgba(255,255,255,.12); }
+.feed-item.pos-item.win { border-left-color: var(--green); }
+.feed-item.pos-item.lose { border-left-color: var(--red); }
+.feed-item .pnl .pct { font-size: 12px; font-weight: 650; margin-top: 1px; }
+.feed-item .pnl.stale { color: var(--sec); font-weight: 650; font-size: 12px; }

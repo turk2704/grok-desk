@@ -114,6 +114,64 @@
     else if (n < 0) el.classList.add('neg');
   }
 
+  function esc(s) {
+    return String(s ?? '').replace(/[&<>"']/g, ch => (
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[ch]
+    ));
+  }
+
+  function isTradeEvent(e) {
+    const status = (e.status || '').toLowerCase();
+    const action = (e.action || '').toLowerCase();
+    if (e.group_buy || action === 'group_buy' || status === 'alert') return true;
+    if (status === 'skipped' || status === 'ignored' || status === 'backfill') return false;
+    return status === 'filled' || action === 'buy' || action === 'sell' || action === 'flatten';
+  }
+
+  function positionItemHTML(p, closed=false) {
+    const coin = p.symbol || p.name || (p.mint ? p.mint.slice(0,6) : '—');
+    const trader = p.copy_trader || p.copy_handle || (p.source === 'copy' ? 'Copy' : (p.source || 'Desk'));
+    const size = p.size_usd != null ? Number(p.size_usd) : null;
+    const stale = !closed && !!p.stale;
+    const pnl = closed ? p.pnl_usd : p.unrealized_usd;
+    const pct = p.pnl_pct != null ? p.pnl_pct
+      : (pnl != null && size ? (pnl / size * 100) : null);
+    let pnlHtml;
+    if (stale) {
+      pnlHtml = `<div class="pnl stale">price stale</div>`;
+    } else if (pnl == null) {
+      pnlHtml = `<div class="pnl muted">—</div>`;
+    } else {
+      const tone = pnl >= 0 ? 'pos' : 'neg';
+      const pctLine = pct != null ? `<div class="pct">${fmtPct(pct)}</div>` : '';
+      pnlHtml = `<div class="pnl ${tone}">${fmtMoney(pnl, true)}${pctLine}</div>`;
+    }
+    const subBits = [esc(trader)];
+    if (size != null) subBits.push(`PAPER $${size.toFixed(2)}`);
+    if (closed && p.exit_reason) subBits.push(esc(p.exit_reason));
+    const fomo = p.coin_url && String(p.coin_url).includes('r=turk2706')
+      ? `<a class="fomo-mini" href="${p.coin_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">FOMO</a>`
+      : '';
+    const toneClass = stale || pnl == null ? '' : (pnl > 0 ? 'win' : pnl < 0 ? 'lose' : '');
+    return `<div class="feed-item pos-item ${toneClass}" data-mint="${esc(p.mint||'')}">
+      <div>
+        <div class="title">${esc(coin)}</div>
+        <div class="sub">${subBits.join(' · ')}</div>
+      </div>
+      <div class="side">${pnlHtml}</div>
+      ${fomo}
+    </div>`;
+  }
+
+  function renderPositionList(el, rows, emptyText, closed=false) {
+    if (!el) return;
+    if (!rows || !rows.length) {
+      el.innerHTML = `<div class="feed-empty">${emptyText}</div>`;
+      return;
+    }
+    el.innerHTML = rows.map(p => positionItemHTML(p, closed)).join('');
+  }
+
   function ageLabel(ageS) {
     if (ageS == null) return 'no hb';
     if (ageS < 5) return 'now';
@@ -179,16 +237,18 @@
       ? `PAPER $${Number(entry).toFixed(2)}`
       : (e.note || e.status || 'PAPER');
     const pnl = e.pnl_usd;
+    const pct = (pnl != null && entry != null && Number(entry) > 0)
+      ? (Number(pnl) / Number(entry) * 100) : null;
     const pnlHtml = pnl == null ? '' :
-      `<div class="pnl ${pnl>=0?'pos':'neg'}">${fmtMoney(pnl, true)}</div>`;
+      `<div class="pnl ${pnl>=0?'pos':'neg'}">${fmtMoney(pnl, true)}${pct!=null?`<div class="pct">${fmtPct(pct)}</div>`:''}</div>`;
     // FOMO URL must come from server (links.py). Never invent.
     const fomo = e.coin_url && String(e.coin_url).includes('r=turk2706')
       ? `<a class="fomo-mini" href="${e.coin_url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">FOMO</a>`
       : '';
     return `<div class="feed-item ${group?'group':''}" data-mint="${e.mint||''}">
       <div>
-        <div class="title">${coin}</div>
-        <div class="sub">${trader} · ${entryLine}</div>
+        <div class="title">${esc(coin)}</div>
+        <div class="sub">${esc(trader)} · ${esc(entryLine)}</div>
       </div>
       <div class="side">
         <span class="badge ${badge}">${badgeText}</span>
@@ -221,6 +281,21 @@
       $('#equityLine').textContent = `Equity ${fmtMoney(equity)} · bal ${fmtMoney(st.balance)}`;
       $('#paperPill').classList.toggle('hidden', st.mode !== 'PAPER');
 
+      const opensList = st.open_positions || [];
+      const wins = opensList.filter(p => !p.stale && p.unrealized_usd > 0).length;
+      const losses = opensList.filter(p => !p.stale && p.unrealized_usd < 0).length;
+      const staleN = opensList.filter(p => p.stale).length;
+      const bits = [];
+      if (wins) bits.push(wins + (wins === 1 ? ' up' : ' up'));
+      if (losses) bits.push(losses + (losses === 1 ? ' down' : ' down'));
+      if (staleN) bits.push(staleN + ' stale');
+      $('#posSummary').textContent = opensList.length ? bits.join(' · ') : '';
+      renderPositionList($('#homePositions'), opensList, 'No open positions', false);
+
+      const closed = st.closed_today || [];
+      $('#closedWrap').classList.toggle('hidden', !closed.length);
+      if (closed.length) renderPositionList($('#homeClosed'), closed, 'None closed yet', true);
+
       const agents = st.agents || [];
       const liveN = agents.filter(a => {
         const age = a.heartbeat_age_s != null ? a.heartbeat_age_s : computeAge(a.heartbeat);
@@ -238,7 +313,8 @@
           feed = (st.copy && st.copy.events_today) || [];
         }
       }
-      $('#homeCopy').innerHTML = (feed||[]).slice(0,8).map(feedItemHTML).join('')
+      const trades = (feed||[]).filter(isTradeEvent);
+      $('#homeCopy').innerHTML = trades.slice(0,8).map(feedItemHTML).join('')
         || '<div class="feed-empty">No copy trades yet tonight</div>';
     } catch (e) {
       showErr(`Desk offline · retrying in ${state.retry}s`);
@@ -309,9 +385,20 @@
         rules.delay_s != null ? `<span class="pill">lag ${rules.delay_s}s</span>` : '',
         `<span class="pill paper">PAPER</span>`,
       ].join('');
+      const open = data.open || [];
+      const closed = data.closed_today || [];
       const events = data.events || [];
-      $('#copyFeed').innerHTML = events.map(feedItemHTML).join('')
-        || '<div class="feed-empty">No copy trades yet tonight</div>';
+      const trades = events.filter(isTradeEvent);
+      const parts = [];
+      if (open.length) {
+        parts.push('<h2 class="section">Open positions</h2>' + open.map(p => positionItemHTML(p, false)).join(''));
+      }
+      if (closed.length) {
+        parts.push('<h2 class="section">Closed today</h2>' + closed.map(p => positionItemHTML(p, true)).join(''));
+      }
+      parts.push('<h2 class="section">Copy trades</h2>');
+      parts.push(trades.map(feedItemHTML).join('') || '<div class="feed-empty">No copy trades yet tonight</div>');
+      $('#copyFeed').innerHTML = parts.join('');
     } catch (e) { showErr(e.message); }
   }
 
