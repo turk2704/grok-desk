@@ -1,1 +1,1 @@
-{"mint": "TTWofwAge91oFhZs7kpQdyrVRkmevgM88xijGvQFbKo", "layers": [], "coin_url": "https://fomo.family/coin?address=TTWofwAge91oFhZs7kpQdyrVRkmevgM88xijGvQFbKo&chainId=1399811149&r=turk2706&source=share_link"}
+{"mint": "TTWofwAge91oFhZs7kpQdyrVRkmevgM88xijGvQFbKo", "layers": [{"layer": 1, "name": "Mint authority", "value_text": "no data: mint authority", "pass": 0, "source": "rpc", "ts": "2026-11-12T17:38:02.962979+00:00"}], "coin_url": "https://fomo.family/coin?address=TTWofwAge91oFhZs7kpQdyrVRkmevgM88xijGvQFbKo&chainId=1399811149&r=turk2706&source=share_link"}
