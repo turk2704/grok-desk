@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="nl">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1"/>
@@ -8,8 +8,9 @@
   <meta name="theme-color" content="#050505"/>
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-180.png"/>
-  <title>Desk · PAPER</title>
-  <link rel="stylesheet" href="app.css?v=20261110b"/>
+  <title>Grok Bot · PAPER</title>
+  <link rel="stylesheet" href="app.css?v=20261118a"/>
+  <link rel="stylesheet" href="terminal.css?v=20261118a"/>
 </head>
 <body>
   <div id="err" class="err hidden" role="status"></div>
@@ -18,16 +19,52 @@
     <div class="brand">
       <span class="brand-mark">◈</span>
       <div>
-        <div class="brand-title">Desk</div>
+        <div class="brand-title">Grok Bot</div>
         <div class="brand-sub">Solana · memecoins</div>
       </div>
     </div>
-    <span id="paperPill" class="pill paper">PAPER</span>
+    <div class="top-right">
+      <span id="paperPill" class="pill paper">PAPER</span>
+      <span id="tOpen" class="top-open">0 open</span>
+      <span id="tClock" class="top-clock">--:--</span>
+    </div>
   </header>
 
   <main id="screens">
     <!-- HOME -->
-    <section id="home" class="screen active">
+    <!-- TERMINAL (iPhone-first) -->
+    <section id="terminal" class="screen active">
+      <div class="t-bal">
+        <div class="t-bal-label"><span id="tMode">PAPER</span> saldo</div>
+        <div id="tBalance" class="t-bal-big">$0.00</div>
+        <div class="t-bal-row">
+          <span id="tTotal" class="t-total">$0.00 (0.00%)</span>
+          <span class="t-since">sinds reset</span>
+        </div>
+        <div class="t-chips">
+          <span id="tMult" class="t-chip">1.00×</span>
+          <span id="tToday" class="t-chip">vandaag $0.00</span>
+        </div>
+      </div>
+      <div class="t-card t-chart-card">
+        <div class="t-card-head"><span>Resultaat gesloten trades</span><span id="tRangePnl" class="muted"></span></div>
+        <canvas id="tEquity" class="t-equity"></canvas>
+        <div class="t-ranges" id="tRanges">
+          <button data-r="1H">1H</button><button data-r="4H">4H</button><button data-r="1D">1D</button><button data-r="1W">1W</button><button data-r="ALL" class="on">ALL</button>
+        </div>
+      </div>
+      <div class="t-card" id="tNow">
+        <div class="t-card-head"><span>Nu bezig</span><span id="tNowAge" class="muted"></span></div>
+        <div id="tNowBody" class="t-now-body"><div class="feed-empty">Laden…</div></div>
+      </div>
+      <div class="t-card">
+        <div class="t-card-head"><span>Activiteit</span><span class="muted">tijd Brussel</span></div>
+        <div id="tFeed" class="t-feed"><div class="feed-empty">Laden…</div></div>
+      </div>
+      <div class="t-foot muted">PAPER · geen echte orders · links via FOMO (r=turk2706)</div>
+    </section>
+
+    <section id="home" class="screen">
       <div class="pnl-hero">
         <div class="pnl-label">Today · PAPER</div>
         <div id="pnlToday" class="pnl-big">$0.00</div>
@@ -133,13 +170,15 @@
   </main>
 
   <nav class="tabbar" aria-label="Main">
-    <button data-tab="home" class="on"><span class="ti">⌂</span><span>Home</span></button>
+    <button data-tab="terminal" class="on"><span class="ti">◈</span><span>Terminal</span></button>
+    <button data-tab="home"><span class="ti">⌂</span><span>Posities</span></button>
     <button data-tab="agents"><span class="ti">◎</span><span>Agents</span></button>
     <button data-tab="copy"><span class="ti">↔</span><span>Copy</span></button>
     <button data-tab="account"><span class="ti">◯</span><span>Account</span></button>
   </nav>
 
-  <script src="chart.js?v=20261110b"></script>
-  <script src="app.js?v=20261110b"></script>
+  <script src="chart.js?v=20261118a"></script>
+  <script src="terminal.js?v=20261118a"></script>
+  <script src="app.js?v=20261118a"></script>
 </body>
 </html>

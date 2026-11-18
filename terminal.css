@@ -1,0 +1,60 @@
+/* Grok Bot · Terminal (iPhone-first, 390px) */
+.top-right { display:flex; align-items:center; gap:8px; }
+.top-open { font-size:12px; color:var(--sec); font-variant-numeric:tabular-nums; }
+.top-clock { font-size:13px; font-weight:600; font-variant-numeric:tabular-nums; color:var(--text); }
+#terminal { padding: 6px 16px 20px; max-width: 520px; margin: 0 auto; }
+.t-bal { padding: 10px 2px 14px; }
+.t-bal-label { font-size:13px; color:var(--sec); letter-spacing:.2px; }
+.t-bal-big { font-size:44px; font-weight:700; letter-spacing:-1.2px; line-height:1.1; margin:2px 0 4px; font-variant-numeric:tabular-nums; }
+.t-bal-row { display:flex; align-items:baseline; gap:8px; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; }
+.t-since { font-size:12px; color:var(--ter); font-weight:500; }
+.t-chips { display:flex; gap:8px; margin-top:10px; }
+.t-chip { font-size:12px; font-weight:600; padding:5px 10px; border-radius:999px; background:var(--card2); color:var(--sec); font-variant-numeric:tabular-nums; }
+.t-chip.pos { background:rgba(48,209,88,.14); color:var(--green); }
+.t-chip.neg { background:rgba(255,69,58,.14); color:var(--red); }
+.pos { color:var(--green); } .neg { color:var(--red); }
+.t-card { background:var(--card); border:1px solid rgba(255,255,255,.05); border-radius:var(--radius); padding:12px; margin-bottom:12px; }
+.t-card-head { display:flex; justify-content:space-between; align-items:center; font-size:14px; font-weight:600; margin-bottom:8px; }
+.t-card-head .muted { font-size:12px; font-weight:500; color:var(--ter); }
+.t-card-head .muted.pos { color:var(--green); } .t-card-head .muted.neg { color:var(--red); }
+.t-equity { width:100%; height:190px; display:block; }
+.t-ranges { display:flex; justify-content:space-between; gap:6px; margin-top:8px; }
+.t-ranges button { flex:1; background:transparent; border:0; color:var(--sec); font:600 12px -apple-system, sans-serif; padding:7px 0; border-radius:9px; }
+.t-ranges button.on { background:var(--card2); color:var(--text); }
+.t-ico { position:relative; width:36px; height:36px; flex:0 0 36px; border-radius:50%; background:#2a2a2e; display:inline-flex; align-items:center; justify-content:center; overflow:visible; }
+.t-ico img { width:36px; height:36px; border-radius:50%; object-fit:cover; position:absolute; inset:0; z-index:1; }
+.t-ico b { font-size:15px; color:var(--sec); }
+.t-ico-badge { position:absolute; right:-2px; bottom:-2px; width:13px; height:13px; border-radius:50%; border:2px solid var(--card); z-index:2; }
+.t-ico-badge.buy { background:var(--blue); } .t-ico-badge.sell { background:var(--green); }
+.t-ico-badge.stop { background:var(--red); } .t-ico-badge.skip { background:#636366; }
+.t-now-top { display:flex; align-items:center; gap:10px; }
+.t-now-main { flex:1; min-width:0; }
+.t-now-title { font-size:17px; font-weight:700; }
+.t-now-status { font-size:13px; color:var(--sec); margin-top:2px; }
+.t-tag { font-size:10px; font-weight:700; text-transform:uppercase; padding:2px 6px; border-radius:6px; vertical-align:middle; margin-left:4px; }
+.t-tag.open { background:rgba(48,209,88,.16); color:var(--green); }
+.t-tag.watch { background:rgba(255,159,10,.16); color:var(--orange); }
+.t-fomo { font-size:12px; font-weight:700; color:#000; background:var(--green); padding:7px 12px; border-radius:999px; text-decoration:none; }
+.t-now-stats { display:flex; gap:14px; margin:10px 0 8px; flex-wrap:wrap; }
+.t-now-stats div { display:flex; flex-direction:column; font-size:11px; color:var(--ter); }
+.t-now-stats b { font-size:13px; color:var(--text); font-variant-numeric:tabular-nums; }
+.t-frame { width:100%; height:300px; border:0; border-radius:12px; background:#0b0b0d; display:block; }
+.t-frame-empty { display:flex; align-items:center; justify-content:center; color:var(--ter); font-size:13px; height:120px; }
+.t-now-idle { display:flex; align-items:center; gap:12px; padding:6px 0; }
+.t-now-note { font-size:12px; color:var(--ter); margin-top:8px; }
+.t-pulse { width:12px; height:12px; border-radius:50%; background:var(--orange); box-shadow:0 0 0 0 rgba(255,159,10,.6); animation:tpulse 1.8s infinite; flex:0 0 12px; margin:0 12px 0 6px; }
+@keyframes tpulse { 0% { box-shadow:0 0 0 0 rgba(255,159,10,.55);} 70% { box-shadow:0 0 0 12px rgba(255,159,10,0);} 100% { box-shadow:0 0 0 0 rgba(255,159,10,0);} }
+.t-feed { display:flex; flex-direction:column; }
+.t-act { display:flex; align-items:center; gap:10px; padding:10px 0; border-top:1px solid var(--sep); color:inherit; text-decoration:none; }
+.t-act:first-child { border-top:0; }
+.t-act-main { flex:1; min-width:0; }
+.t-act-title { font-size:14px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t-act-sub { font-size:12px; color:var(--sec); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.t-bot { color:var(--purple); font-weight:600; }
+.t-act-side { text-align:right; flex:0 0 auto; }
+.t-act-val { font-size:14px; font-weight:700; font-variant-numeric:tabular-nums; }
+.t-act-val small { font-size:11px; font-weight:600; opacity:.85; }
+.t-act-time { font-size:11px; color:var(--ter); margin-top:2px; font-variant-numeric:tabular-nums; }
+.t-act.skip .t-act-title { color:var(--sec); }
+.t-foot { text-align:center; font-size:11px; color:var(--ter); padding:6px 0 10px; }
+.tabbar button span:last-child { font-size:10px; }

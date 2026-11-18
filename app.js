@@ -6,7 +6,7 @@
     dataPath: null,
     planB: false,
     base: '',
-    tab: 'home',
+    tab: 'terminal',
     offline: false,
     retry: 5,
     pollMs: 15000,
@@ -502,7 +502,7 @@
       if (!mint) return;
       openCoin(mint);
     });
-    $$('[data-back]').forEach(b => b.onclick = () => { setTab('home'); refreshHome(); });
+    $$('[data-back]').forEach(b => b.onclick = () => { setTab('terminal'); terminalRefresh(); });
     $('#inviteBtn').onclick = async () => {
       let url = state.signupUrl;
       try { url = (await api('/api/account')).signup_url || url; } catch (_) {}
@@ -524,7 +524,17 @@
     };
   }
 
+  function terminalRefresh() {
+    if (window.DeskTerminal) return window.DeskTerminal.refresh({ dataUrl, planB: state.planB, onError: showErr });
+  }
+
+  function tick() {
+    if (state.tab === 'terminal') return terminalRefresh();
+    return refreshHome();
+  }
+
   async function refresh() {
+    if (state.tab === 'terminal') await terminalRefresh();
     if (state.tab === 'home') await refreshHome();
     if (state.tab === 'agents') await refreshAgents();
     if (state.tab === 'copy') await refreshCopy();
@@ -535,7 +545,7 @@
   wire();
   if (state.planB) {
     if (!state.dataPath) showErr('Missing data path. Open once as {URL}#d=…');
-    else { refresh(); setInterval(refreshHome, state.pollMs); }
+    else { refresh(); setInterval(tick, state.pollMs); }
   } else if (!state.token) {
     // Local desk without token still useful for screenshots if we inject later;
     // show guidance.
