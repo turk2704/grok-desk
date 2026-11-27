@@ -9,8 +9,8 @@
   <link rel="manifest" href="manifest.json"/>
   <link rel="apple-touch-icon" href="icons/icon-180.png"/>
   <title>Grok Bot · PAPER</title>
-  <link rel="stylesheet" href="app.css?v=20261118a"/>
-  <link rel="stylesheet" href="terminal.css?v=20261118a"/>
+  <link rel="stylesheet" href="app.css?v=20261127a"/>
+  <link rel="stylesheet" href="terminal.css?v=20261127a"/>
 </head>
 <body>
   <div id="err" class="err hidden" role="status"></div>
@@ -44,6 +44,15 @@
         <div class="t-chips">
           <span id="tMult" class="t-chip">1.00×</span>
           <span id="tToday" class="t-chip">vandaag $0.00</span>
+        </div>
+      </div>
+      <div class="t-card" id="tLive">
+        <div class="t-card-head">
+          <span>LIVE / Dryrun</span>
+          <span id="tLiveBadge" class="t-live-badge off">UIT</span>
+        </div>
+        <div id="tLiveBody" class="t-live-body">
+          <div class="feed-empty">Wacht op eerste update van de server...</div>
         </div>
       </div>
       <div class="t-card t-chart-card">
@@ -177,8 +186,8 @@
     <button data-tab="account"><span class="ti">◯</span><span>Account</span></button>
   </nav>
 
-  <script src="chart.js?v=20261118a"></script>
-  <script src="terminal.js?v=20261118a"></script>
-  <script src="app.js?v=20261118a"></script>
+  <script src="chart.js?v=20261127a"></script>
+  <script src="terminal.js?v=20261127a"></script>
+  <script src="app.js?v=20261127a"></script>
 </body>
 </html>

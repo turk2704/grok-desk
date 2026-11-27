@@ -308,6 +308,109 @@
     }).join('');
   }
 
+
+  function reasonLive(r) {
+    const x = String(r.exit_reason || '');
+    const map = {
+      stop: 'stop', tp: 'winst genomen', take_profit: 'winst genomen',
+      cash_in_0800: 'sluiting 08:00', flatten: 'sluiting 08:00',
+      trader_sell: 'trader verkocht', 'PAPER gesloten': 'PAPER gesloten',
+      'dryrun beëindigd': 'dryrun beëindigd',
+    };
+    return map[x] || x || 'gesloten';
+  }
+
+  function renderLive(st) {
+    const live = st && st.live;
+    const badge = $('#tLiveBadge');
+    const body = $('#tLiveBody');
+    if (!badge || !body) return;
+    const ready = live && (live.limits || live.today || live.wallet || (live.mode && live.mode !== 'off') || live.enabled);
+    if (!live || (!ready && live.mode === 'off' && live.enabled === false && !live.limits)) {
+      badge.textContent = 'UIT';
+      badge.className = 't-live-badge off';
+      body.innerHTML = '<div class="feed-empty t-live-wait">Wacht op eerste update van de server...</div>';
+      return;
+    }
+    const mode = (live.mode === 'live' || live.mode === 'dryrun') ? live.mode : 'off';
+    badge.textContent = mode === 'dryrun' ? 'DRYRUN' : mode === 'live' ? 'LIVE' : 'UIT';
+    badge.className = 't-live-badge ' + mode;
+    const lim = live.limits || {};
+    const today = live.today || {};
+    const total = live.total || {};
+    const wallet = live.wallet || {};
+    const spent = today.spent_usd;
+    const cap = lim.max_daily_spend_usd;
+    const spentLine = (spent != null && cap != null)
+      ? `${money(spent)} / ${money(cap)} ingezet`
+      : (spent != null ? `${money(spent)} ingezet` : '—');
+    const wins = total.wins, losses = total.losses, trades = total.trades;
+    const wl = (wins != null && losses != null)
+      ? `${wins}W / ${losses}L` + (trades != null ? ` · ${trades} trades` : '')
+      : (trades != null ? `${trades} trades` : '—');
+    const openN = live.open_count != null ? live.open_count : (live.open_positions || []).length;
+    const maxOpen = lim.max_open;
+    const openLine = maxOpen != null ? `${openN} / ${maxOpen}` : String(openN);
+    const sol = wallet.sol, usd = wallet.usd;
+    const solLine = sol != null ? Number(sol).toLocaleString('nl-BE', { maximumFractionDigits: 4 }) + ' SOL' : '—';
+    const usdLine = usd != null ? money(usd) : '—';
+    const ticket = lim.ticket_usd;
+    const ticketLine = ticket != null ? money(ticket) : '—';
+    const kpis = `
+      <div class="t-live-kpis">
+        <div class="t-live-kpi"><div class="k">Vandaag</div>
+          <div class="v ${tone(today.pnl_usd)}">${today.pnl_usd == null ? '—' : money(today.pnl_usd, true)}</div>
+          <div class="s">${esc(spentLine)}</div></div>
+        <div class="t-live-kpi"><div class="k">Totaal</div>
+          <div class="v ${tone(total.pnl_usd)}">${total.pnl_usd == null ? '—' : money(total.pnl_usd, true)}</div>
+          <div class="s">${esc(wl)}</div></div>
+        <div class="t-live-kpi"><div class="k">Open</div>
+          <div class="v">${esc(openLine)}</div>
+          <div class="s">ticket ${esc(ticketLine)}</div></div>
+        <div class="t-live-kpi"><div class="k">Wallet</div>
+          <div class="v">${esc(solLine)}</div>
+          <div class="s">${esc(usdLine)}</div></div>
+      </div>`;
+
+    function rowOpen(p) {
+      const sym = p.symbol || (p.mint ? p.mint.slice(0, 6) : '—');
+      const link = safeLink(p.coin_url);
+      const tag = link ? 'a' : 'div';
+      const href = link ? ` href="${esc(link)}" target="_blank" rel="noopener"` : '';
+      const lane = p.lane ? '<span class="t-tag lane">microcap</span>' : '';
+      return `<${tag} class="t-act"${href}>${icon(p.mint, sym)}
+        <div class="t-act-main"><div class="t-act-title">${esc(sym)}${lane}</div>
+          <div class="t-act-sub">inzet ${esc(money(p.cost_usd))}${p.dry ? ' · dryrun' : ''}</div></div>
+        <div class="t-act-side"><div class="t-act-time">${p.opened_at ? when(p.opened_at) : ''}</div></div></${tag}>`;
+    }
+    function rowClosed(p) {
+      const sym = p.symbol || (p.mint ? p.mint.slice(0, 6) : '—');
+      const link = safeLink(p.coin_url);
+      const tag = link ? 'a' : 'div';
+      const href = link ? ` href="${esc(link)}" target="_blank" rel="noopener"` : '';
+      const lane = p.lane ? '<span class="t-tag lane">microcap</span>' : '';
+      const pnl = p.pnl_usd;
+      const pct1 = p.pnl_pct != null ? pct(p.pnl_pct) : '';
+      const val = pnl == null ? '' : `<div class="t-act-val ${tone(pnl)}">${esc(money(pnl, true))}${pct1 ? ' <small>' + esc(pct1) + '</small>' : ''}</div>`;
+      return `<${tag} class="t-act"${href}>${icon(p.mint, sym, pnl < 0 ? 'stop' : 'sell')}
+        <div class="t-act-main"><div class="t-act-title">${esc(sym)}${lane}</div>
+          <div class="t-act-sub">inzet ${esc(money(p.cost_usd))} · ${esc(reasonLive(p))}</div></div>
+        <div class="t-act-side">${val}<div class="t-act-time">${p.closed_at ? when(p.closed_at) : ''}</div></div></${tag}>`;
+    }
+    const opens = live.open_positions || [];
+    const closed = live.recent_closed || [];
+    let lists = '';
+    lists += '<div class="t-live-sub">Open posities</div>';
+    lists += opens.length
+      ? `<div class="t-live-list">${opens.map(rowOpen).join('')}</div>`
+      : '<div class="feed-empty">Geen open posities</div>';
+    lists += '<div class="t-live-sub">Recente trades</div>';
+    lists += closed.length
+      ? `<div class="t-live-list">${closed.map(rowClosed).join('')}</div>`
+      : '<div class="feed-empty">Nog geen trades</div>';
+    body.innerHTML = kpis + lists;
+  }
+
   // ---------- header + balance ----------
   function renderTop(st) {
     const mode = String(st.mode || 'PAPER').toUpperCase();
@@ -347,16 +450,20 @@
       const trades = tradesList(eq, risk);
       T.trades = trades;
       renderTop(st);
+      renderLive(st);
       drawEquity(trades);
       renderNow(st, eq);
       renderFeed(act, trades, eq);
       const exec = (st.agents || []).find(a => a.name === 'executor') || {};
+      const live = st.live || {};
       const mints = [...(st.open_positions || []).map(p => p.mint), ...((eq && eq.watching) || []).map(w => w.mint),
         ...(exec.watching || []).map(w => typeof w === 'string' ? w : w.mint),
-        ...((act && act.rows) || []).slice(0, 25).map(r => r.mint)];
+        ...((act && act.rows) || []).slice(0, 25).map(r => r.mint),
+        ...(live.open_positions || []).map(p => p.mint),
+        ...(live.recent_closed || []).map(p => p.mint)];
       const before = Object.keys(T.dex).length;
       await dexInfo(mints);
-      if (Object.keys(T.dex).length !== before) { renderNow(st, eq); renderFeed(act, trades, eq); }
+      if (Object.keys(T.dex).length !== before) { renderNow(st, eq); renderFeed(act, trades, eq); renderLive(st); }
     } catch (e) {
       if (ctx.onError) ctx.onError('Desk data niet bereikbaar · opnieuw proberen');
     } finally { T.busy = false; }

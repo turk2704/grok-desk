@@ -58,3 +58,19 @@
 .t-act.skip .t-act-title { color:var(--sec); }
 .t-foot { text-align:center; font-size:11px; color:var(--ter); padding:6px 0 10px; }
 .tabbar button span:last-child { font-size:10px; }
+
+/* LIVE / Dryrun panel */
+.t-live-badge { font-size:10px; font-weight:700; letter-spacing:.5px; text-transform:uppercase; padding:3px 8px; border-radius:999px; }
+.t-live-badge.dryrun { background:rgba(255,159,10,.16); color:var(--orange); border:1px solid rgba(255,159,10,.28); }
+.t-live-badge.live { background:rgba(48,209,88,.16); color:var(--green); border:1px solid rgba(48,209,88,.28); }
+.t-live-badge.off { background:rgba(84,84,88,.35); color:var(--sec); }
+.t-live-kpis { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.t-live-kpi { background:var(--card2); border-radius:12px; padding:8px 10px; }
+.t-live-kpi .k { font-size:10px; text-transform:uppercase; letter-spacing:.4px; color:var(--ter); font-weight:600; }
+.t-live-kpi .v { font-size:16px; font-weight:700; font-variant-numeric:tabular-nums; margin-top:2px; line-height:1.2; }
+.t-live-kpi .s { font-size:11px; color:var(--sec); margin-top:2px; font-variant-numeric:tabular-nums; }
+.t-live-sub { font-size:12px; font-weight:600; color:var(--sec); margin:12px 0 4px; }
+.t-live-list { display:flex; flex-direction:column; }
+.t-live-list .t-act { padding:8px 0; }
+.t-tag.lane { background:rgba(191,90,242,.16); color:var(--purple); margin-left:4px; }
+.t-live-wait { margin:0; }
